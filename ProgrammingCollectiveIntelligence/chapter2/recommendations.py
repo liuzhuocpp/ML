@@ -26,7 +26,7 @@ critics={
 'Toby': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0,'Superman Returns':4.0}
 }
 
-print critics['Lisa Rose']['Lady in the Water']
+# print critics['Lisa Rose']['Lady in the Water']
 
 from math import sqrt
 
@@ -46,7 +46,7 @@ def sim_distace(prefs, person1, person2):
     ans = 1 / (1 + sqrt(ans));
     return ans;
 
-print "%.17f" %sim_distace(critics, 'Lisa Rose', 'Gene Seymour')
+# print "%.17f" %sim_distace(critics, 'Lisa Rose', 'Gene Seymour')
 
 
 #皮尔逊相关度
@@ -61,38 +61,43 @@ def sim_pearson(prefs, p1, p2):
     sumX = sum([prefX[i] for i in com.keys() ] )
     sumY = sum([prefY[i] for i in com.keys() ] )
 
-    print "SUM : " , sumX, sumY
+    n = len(com)
+    if n == 0: return 1
 
-
-    aveX = sumX / len(com)
-    aveY = sumY / len(com)
-
-    print "AVE : " , aveX, aveY
-
-
-
+    aveX = sumX / n
+    aveY = sumY / n
 
     tmp = [  (prefX[i] - aveX) * (prefY[i] - aveY) for i in com.keys()  ]
-    print "TMP", tmp
-    for i in com.keys():
-        print "NAME", i
-        print "SB", (prefX[i] - aveX), (prefY[i] - aveY)
+
+    # for i in com.keys():
+    #     print "NAME", i
+    #     print "SB", (prefX[i] - aveX), (prefY[i] - aveY)
 
 
     up = sum(tmp)
-
-    print "UP : " , up, len(com)
 
     down_left = sum([ pow(prefX[i] - aveX, 2)  for i in com.keys()   ])
     down_right = sum([ pow(prefY[i] - aveY, 2)  for i in com.keys()  ])
 
     down = sqrt(down_left * down_right)
+    # down = sqrt(down_left) * sqrt(down_right )
     if down == 0: return 0
     return up / down
 
 print  "%.17f" %sim_pearson(critics,'Lisa Rose', 'Gene Seymour')
 
+def topMatches(prefs, person, n = 5, similarity=sim_pearson):
+    scores = [(similarity(prefs, person, other), other) for other in prefs if other != person ]
+    scores.sort()
+    scores.reverse();
+    return scores[0:n]
 
+
+print topMatches(critics,'Toby', n = 3)
+
+
+
+from numpy import *
 
 
 
